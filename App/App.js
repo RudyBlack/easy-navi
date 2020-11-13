@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
@@ -7,26 +7,21 @@ import {
 } from 'react-native'
 import * as Location from './src/Location'
 
-
-
  const App = () => {
-   const getLocation = async (config) => {
-     let curLocation =  Location.getLocation();
-     return curLocation;
-   }
-   
-getLocation().then(result=>{console.log(result)})
+   const [longitude, setLongitude] = useState(0);
+   const [latitude, setLatitude] = useState(0);
 
+   Location.getLocation().then(result=>{
+      setLongitude(result.longitude);
+      setLatitude(result.latitude);
+   })
 
    return (
-     <View
-       style={{
-         flex: 1,
-         justifyContent: "center",
-         alignItems: "center"
-       }}>
-       <Text>Hello, world!</Text>
+     <View >
+       <Text>Hello World</Text>
+       <Text>{longitude},</Text>
+       <Text>{latitude}</Text>
      </View>
-   )
- }
+   );
+ };
  export default App;
