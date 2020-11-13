@@ -1,21 +1,32 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import React from 'react'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+} from 'react-native'
+import * as Location from './src/Location'
 
-const App = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text>Hello World</Text>
-    </SafeAreaView>
-  );
-};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
-export default App;
+ const App = () => {
+   const getLocation = async (config) => {
+     let curLocation =  Location.getLocation();
+     return curLocation;
+   }
+   
+getLocation().then(result=>{console.log(result)})
+
+
+   return (
+     <View
+       style={{
+         flex: 1,
+         justifyContent: "center",
+         alignItems: "center"
+       }}>
+       <Text>Hello, world!</Text>
+     </View>
+   )
+ }
+ export default App;
