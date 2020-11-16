@@ -2,32 +2,41 @@ import React from 'react'
 import RNLocation from 'react-native-location';
 
 
-const setConfig = (config) => {
-  RNLocation.configure(config);
+const setLocationConfig = (config) => {
+  RNLocation.configure({
+    desiredAccuracy: {
+      android: "balancedPowerAccuracy"
+    }
+  });
+};
+
+const getPermission = async () => {
+  let permission = await RNLocation.requestPermission({
+    ios: 'whenInUse', // or 'always'
+    android: {
+      detail: 'fine', // or 'fine'
+      rationale: {
+        title: "We need to access your location",
+        message: "We use your location to show where you are on the map",
+        buttonPositive: "OK",
+        buttonNegative: "Cancel"
+      }
+    }
+  });
+
+  return permission;
 }
 
 const getLocation = async () => {
-  let permission = await RNLocation.requestPermission({
-   ios: "whenInUse",
-   android: {
-     detail: "coarse"
-   }
-  })
-
-  if(permission) {
-    let curLocation = await RNLocation.getLatestLocation({ timeout: 60000 })
-    return curLocation;
-  }
-
-}
-
-const update = () => {
-  Location().then(RNLocation => {
+  return new Promise(resolve => {
     RNLocation.subscribeToLocationUpdates(locations => {
-      console.log(locations);
-        return locations;
+      resolve(locations);
     })
-  });
+  })
 }
 
-export {setConfig, getLocation, update}
+export {
+  getPermission,
+  getLocation,
+  setLocationConfig
+}
