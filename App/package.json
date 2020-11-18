@@ -6,12 +6,16 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
+    "web": "node ./web/backend/app.js",
     "test": "jest",
     "lint": "eslint ."
   },
   "dependencies": {
+    "express": "^4.17.1",
     "react": "16.13.1",
-    "react-native": "0.63.3"
+    "react-native": "0.63.3",
+    "react-native-location": "^2.5.0",
+    "react-native-webview": "^10.10.2"
   },
   "devDependencies": {
     "@babel/core": "7.12.3",

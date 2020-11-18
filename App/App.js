@@ -1,28 +1,38 @@
-import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
-import * as Location from './src/Location';
-const App = () => {
+import React, {useState} from 'react'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
 
-  const [location, setLocation] = useState('');
-  Location.getLocation().then(result=>{
-      setLocation(result);
-  })
+} from 'react-native'
+import {getPermission, getLocation, setLocationConfig} from './src/Location'
+import {WebView} from 'react-native-webview'
+const Location = async ({setLongitude, setLatitude}) => {
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text>Hello World</Text>
-      <Text>{location}</Text>
-    </SafeAreaView>
-  );
+ let granted = await getPermission();
+ if(granted){
+   let location = await getLocation();
+   let {longitude, latitude} = location[0];
+
+   setLongitude(longitude);
+   setLatitude(latitude);
+ }
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+ const App = () => {
+   const [longitude, setLongitude] = useState(0);
+   const [latitude, setLatitude]   = useState(0);
 
-export default App;
+   Location({setLongitude, setLatitude});
+
+   return (
+        <WebView
+          source={{ uri: "https://library-ykbrl.run.goorm.io/" }}
+          onMessage={(event)=> console.log(event.nativeEvent.data)}
+          originWhitelist={['*']}
+          javaScriptEnabledAndroid={true}
+        />
+   );
+ };
+ export default App;
