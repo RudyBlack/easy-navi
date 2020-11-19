@@ -12,13 +12,6 @@ app.route('/src/*').all(function (req, res) {
     res.sendFile(path.join(__dirname, '../frontend', req.url));
 });
 
-app.route('/testCode/*').all(function(req, res){
-    res.sendFile(path.join(__dirname, '../../', req.url));
-})
-
-app.route('/asset/*').all(function(req, res){
-    res.sendFile(path.join(__dirname, '../../', req.url));
-})
 
 app.listen(port, () => console.log(`Express app is running on port: ${port}`));
 

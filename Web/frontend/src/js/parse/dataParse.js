@@ -8,7 +8,7 @@ const IsJsonString = (str) => {
 }
 
 export const receiveDataParse = (receiveData) => {
-    if( IsJsonString(receiveData) ) return JSON.parse(receiveData);
+    if( IsJsonString(receiveData) ) return JSON.parse(receiveData)[0];
     
     //object일 때
     if(typeof receiveData === 'object' && receiveData !== null){
