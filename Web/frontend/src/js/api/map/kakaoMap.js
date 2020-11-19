@@ -13,20 +13,25 @@ const initMap = (locPosition) => {
     return map;
 };
 
-const updateMap = (obj) => {
-    
-};
+const updateMap = (obj) => {};
 
 export const kakaoMap = (StateManagement) => {
     let [latitude, longitude] = StateManagement.get(['latitude', 'longitude']);
-    
-    StateManagement.regObserver(['latitude','longitude'], (data) => {
-        updateMap({ data });
-    });
-
     let locPosition = new kakao.maps.LatLng(latitude, longitude);
-    const map = initMap(locPosition);
+    let map = initMap(locPosition);
     map.panTo(locPosition);
     
+    StateManagement.regObserver(['latitude', 'longitude'], (data) => {
+        let [latitude, longitude] = StateManagement.get(['latitude', 'longitude']);
+        
+        if(latitude && longitude){
+            
+            let locPosition = new kakao.maps.LatLng(latitude, longitude);    
+            map = initMap(locPosition);
+            map.panTo(locPosition);
+            marker({ locPosition }).setMap(map);
+        }
+    });
+
     marker({ locPosition }).setMap(map);
 };

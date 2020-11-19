@@ -1,4 +1,4 @@
-import * as check from './check.js';
+import {enviroment} from './check/enviromentCheck.js';
 import { outputLog } from './debug/console.js';
 import { receiveDataParse } from './parse/dataParse.js';
 import { kakaoMap } from './api/map/kakaoMap.js';
@@ -18,14 +18,19 @@ window.document.addEventListener('message', function (e) {
     // outputLog({altitude, latitude, longitude});
 });
 
-(function startInterface(frame) {
-    if (frame === 'web') {
+(function startInterface(enviroment) {
+    
+    if (enviroment === 'web') {
         StateManagement.set('latitude', 33.450701).set('longitude', 126.570667 );
+        kakaoMap(StateManagement);
+
     }
 
-    if (frame === 'webview') {
+    if (enviroment === 'webview') {
+        kakaoMap(StateManagement);
         postMessage('location');
+        
     }
 
-    kakaoMap(StateManagement);
-})('web');
+    
+})(enviroment);
