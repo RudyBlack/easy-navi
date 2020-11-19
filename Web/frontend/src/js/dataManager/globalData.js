@@ -30,6 +30,16 @@ export const StateManagement = ((initData) => {
     };
 
     const regObserver = (target, callback) => {
+        if (Array.isArray(target)) {
+            target.map((cur) => {
+                observer.has(cur)
+                    ? observer.get(cur).push(callback)
+                    : observer.set(cur, [callback]);
+            });
+
+            return;
+        }
+
         observer.has(target)
             ? observer.get(target).push(callback)
             : observer.set(target, [callback]);

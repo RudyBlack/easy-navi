@@ -13,25 +13,20 @@ const initMap = (locPosition) => {
     return map;
 };
 
-const updateMap = ({ latitude, longitude }) => {};
+const updateMap = (obj) => {
+    
+};
 
 export const kakaoMap = (StateManagement) => {
     let [latitude, longitude] = StateManagement.get(['latitude', 'longitude']);
-    console.log(StateManagement.get(['latitude', 'longitude']));
-    StateManagement.regObserver('latitude', (data) => {
-        updateMap({ latitude: data });
-    }).regObserver('longitude', (data) => {
-        updateMap({ longitude: data });
+    
+    StateManagement.regObserver(['latitude','longitude'], (data) => {
+        updateMap({ data });
     });
 
     let locPosition = new kakao.maps.LatLng(latitude, longitude);
     const map = initMap(locPosition);
-
-    var curMarker = marker({ locPosition });
-    curMarker.setMap(map);
-
-    // // 인포윈도우를 마커위에 표시합니다
-    // marker.open(map, marker);
-
-    // panTo(map);
+    map.panTo(locPosition);
+    
+    marker({ locPosition }).setMap(map);
 };
