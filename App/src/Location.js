@@ -11,6 +11,7 @@ const setLocationConfig = (config) => {
 };
 
 const getPermission = async () => {
+
   let permission = await RNLocation.requestPermission({
     ios: 'whenInUse', // or 'always'
     android: {
@@ -23,7 +24,6 @@ const getPermission = async () => {
       }
     }
   });
-
   return permission;
 }
 

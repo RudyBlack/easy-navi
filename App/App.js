@@ -9,14 +9,12 @@ import {
 import {getPermission, getLocation, setLocationConfig} from './src/Location'
 import {WebView} from 'react-native-webview'
 
-const Location = async ({setLongitude, setLatitude}) => {
+const Location = async () => {
  let granted = await getPermission();
 
  if(granted){
    let location = await getLocation();
-   let {longitude, latitude} = location[0];
-   setLongitude(longitude);
-   setLatitude(latitude);
+   return location;
  }
 };
 
@@ -33,14 +31,13 @@ const Location = async ({setLongitude, setLatitude}) => {
   }
 
   const postMessage = (data) => {
-    console.log(data);
-     myWebView.postMessage(data, '*');
+    myWebView.postMessage(JSON.stringify(data), '*');
   }
 
   const onMessage = async (message) => {
     if(message.nativeEvent.data === 'location'){
-      await Location({setLongitude, setLatitude});
-      // postMessage({longitude,latitude})
+      let location = await Location();
+      postMessage(location);
     }
   }
 
@@ -49,10 +46,10 @@ const Location = async ({setLongitude, setLatitude}) => {
         <WebView
           ref={webview => { setMyWebView(webview);}}
           onMessage={onMessage}
-          source={{ uri: "https://easy-navi-ieefo.run.goorm.io/" }}
+          source={{ uri: "http://easy-navi-ieefo.run.goorm.io/" }}
           originWhitelist={['*']}
           javaScriptEnabledAndroid={true}
-          injectedJavaScript={injectedJavaScript()}
+          injectedJavaScript={injectedJavaScript('')}
         />
    );
  };
