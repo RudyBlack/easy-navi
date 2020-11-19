@@ -7,27 +7,32 @@
         <title>Document</title>
     </head>
     <body>
-        안녕하세요
+        <div id="console"></div>
+        안녕하세요ㅎㅎㅎㅎ
 
         <script>
-            const data = [];
-             window.document.addEventListener('message', function(e) {
-                alert(e.data); 
-                
-             })
-             //RN -> webView
-            
-            
-            
-                window.ReactNativeWebView.postMessage('location');    
-                
-                
-            
-            
-           
-            
-            
-                                   
+            const outputLog = (data) => {
+                let outputLog = document.getElementById('console');
+                outputLog.innerText = data;
+            };
+
+            let curLocation = new Map();
+
+            //native -> web
+            window.document.addEventListener('message', function (e) {
+                let receiveData = JSON.parse(e.data);
+                let { altitude, latitude, longitude } = receiveData[0];
+
+                curLocation
+                    .set('altitude', altitude)
+                    .set('latitude', latitude)
+                    .set('longitude', longitude);
+
+                outputLog(curLocation.get('altitude'));
+            });
+
+            //web -> native
+            window.ReactNativeWebView.postMessage('location');
         </script>
     </body>
 </html>
