@@ -8,31 +8,6 @@
     </head>
     <body>
         <div id="console"></div>
-        안녕하세요ㅎㅎㅎㅎ
-
-        <script>
-            const outputLog = (data) => {
-                let outputLog = document.getElementById('console');
-                outputLog.innerText = data;
-            };
-
-            let curLocation = new Map();
-
-            //native -> web
-            window.document.addEventListener('message', function (e) {
-                let receiveData = JSON.parse(e.data);
-                let { altitude, latitude, longitude } = receiveData[0];
-
-                curLocation
-                    .set('altitude', altitude)
-                    .set('latitude', latitude)
-                    .set('longitude', longitude);
-
-                outputLog(curLocation.get('altitude'));
-            });
-
-            //web -> native
-            window.ReactNativeWebView.postMessage('location');
-        </script>
+        <script type="module" src="./src/js/main.js"></script>
     </body>
 </html>
