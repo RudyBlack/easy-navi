@@ -1,8 +1,13 @@
 const express = require('express');
-const path = require('path');
-
 const app = express();
+const http = require('http').Server(app);
+const path = require('path');
+const io = require('socket.io')(http);
+const socketio = require('socket.io');
+
 const port = 3000;
+
+require('./socket/socket.js');
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
@@ -12,7 +17,22 @@ app.route('/src/*').all(function (req, res) {
     res.sendFile(path.join(__dirname, '../frontend', req.url));
 });
 
+http.listen(3000, function () {
+    console.log('app is running on port: 3000');
+});
 
-app.listen(port, () => console.log(`Express app is running on port: ${port}`));
+io.on('connection', function (socket) {
+    console.log('user connected: ', socket.id);
+
+    io.to(socket.id).emit('hello', 'is Connect!');
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected: ', socket.id);
+    });
+
+    socket.on('login', (e) => {
+        console.log('user disconnected: ', e);
+    });
+});
 
 module.exports = app;
