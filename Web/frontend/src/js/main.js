@@ -9,28 +9,38 @@ import './receive/receiveFromSocketServer.js';
 import { sendToNative } from './send/sendToNative.js';
 import { sendToSocketServer } from './send/sendToSocketServer.js';
 
-import { kakaoMap } from './api/map/kakaoMap.js';
+import { kakaoMap, kakaoMapDataReceiver } from './api/map/kakaoMap.js';
 
+
+function dataTransporter(dataReceiver, data) {
+    dataReceiver(data);
+}
 StateManagement.regObserver('receiveFromNative', (e) => {
-    let { altitude, latitude, longitude } = dataParse(e.data);
-    StateManagement.set('altitude', altitude).set('latitude', latitude).set('longitude', longitude);
+    dataParse(e.data); //데이터 파스.
+    // dataTransporter();
 });
 
 StateManagement.regObserver('receiveFromSocketServer', (e) => {
     console.log(e);
 });
 
-kakaoMap(StateManagement);
+const map = kakaoMap({
+    container : document.getElementById('map'),
+    level : 3,
+});
 
 if (enviroment === 'web') {
-    navigator.geolocation.getCurrentPosition(function (position) {
-        let latitude = position.coords.latitude;
-        let longitude = position.coords.longitude;
-        StateManagement.set('latitude', latitude).set('longitude', longitude);
+    navigator.geolocation.getCurrentPosition( (position) => {
+        let {latitude, longitude, accuracy} = position.coords;
+        let location = {latitude, longitude, accuracy};
+        dataTransporter(kakaoMapDataReceiver, {map , location});
+        sendToSocketServer('userLocation', location);
     });
+}else{
+     sendToNative('requestLocation');
 }
 
-if (enviroment === 'webview') {
-    sendToNative('location');
-}
+//내 위치정보를 보낸다.
+
+
 

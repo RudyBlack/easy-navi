@@ -30,9 +30,14 @@ io.on('connection', function (socket) {
         console.log('user disconnected: ', socket.id);
     });
 
-    socket.on('login', (e) => {
-        console.log('user disconnected: ', e);
+    socket.on('userLocation', function (e) {
+        io.to(id).emit('userLocation', data); // 이게 안됨.
+
     });
+    
+
 });
+
+
 
 module.exports = app;

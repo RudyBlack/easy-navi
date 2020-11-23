@@ -1,31 +1,33 @@
 import * as move from './move/moveAnimation.js';
 import { marker } from './ui/marker.js';
+import { geolocationParse } from '../../utils/parse/dataParse.js';
 
-let container = document.getElementById('map');
-
-const initMap = (locPosition) => {
-    let options = {
-        center: locPosition,
-        level: 3,
-    };
-
-    var map = new kakao.maps.Map(container, options);
-    return map;
-};
-
-const updateMap = (obj) => {};
-
-export const kakaoMap = (StateManagement) => {
-    
-    StateManagement.regObserver(['latitude', 'longitude'], (data) => {
-        let [latitude, longitude] = StateManagement.get(['latitude', 'longitude']);
-        
-        if(latitude && longitude){
-            
-            let locPosition = new kakao.maps.LatLng(latitude, longitude);    
-            let map = initMap(locPosition);
-            map.panTo(locPosition);
-            marker({ locPosition }).setMap(map);
-        }
+const kakaoMap = ({container, level}) => {
+    return new kakao.maps.Map(container, {
+        center: new kakao.maps.LatLng(0, 0),
+        level
     });
 };
+
+const updateMap = (map, location) => {
+    let { latitude, longitude } = location;
+    let locPosition = new kakao.maps.LatLng(latitude, longitude);
+    setMarker(map, locPosition);
+    panTo(map, locPosition);
+};
+
+const panTo = (map, locPosition) => {
+    map.panTo(locPosition);
+};
+
+const setMarker = (map, locPosition) => {
+    marker({ locPosition }).setMap(map);
+};
+
+const kakaoMapDataReceiver = (data) => {
+    if (data.location) {
+        updateMap(data.map, data.location);
+    }
+};
+
+export {kakaoMap, kakaoMapDataReceiver}

@@ -18,3 +18,10 @@ export const dataParse = (receiveData) => {
     return receiveData;
 }
 
+
+export const geolocationParse = (position) => {
+    let rtnVal = {};
+    rtnVal = position.coords;
+    rtnVal.timestamp = position.timestamp;
+    return rtnVal;
+}
