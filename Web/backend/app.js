@@ -24,20 +24,16 @@ http.listen(3000, function () {
 io.on('connection', function (socket) {
     console.log('user connected: ', socket.id);
 
-    io.to(socket.id).emit('hello', 'is Connect!');
+    
 
     socket.on('disconnect', () => {
         console.log('user disconnected: ', socket.id);
     });
 
     socket.on('userLocation', function (e) {
-        io.to(id).emit('userLocation', data); // 이게 안됨.
-
+        socket.broadcast.emit('hello', e);
     });
     
-
 });
-
-
 
 module.exports = app;

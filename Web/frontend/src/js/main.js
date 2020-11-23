@@ -11,36 +11,35 @@ import { sendToSocketServer } from './send/sendToSocketServer.js';
 
 import { kakaoMap, kakaoMapDataReceiver } from './api/map/kakaoMap.js';
 
+const map = kakaoMap({
+    container: document.getElementById('map'),
+    level: 3,
+});
 
 function dataTransporter(dataReceiver, data) {
     dataReceiver(data);
 }
 StateManagement.regObserver('receiveFromNative', (e) => {
-    dataParse(e.data); //데이터 파스.
-    // dataTransporter();
+    
+    let { latitude, longitude, accuracy } = dataParse(e.data);
+    let location = { latitude, longitude, accuracy };
+    
+    dataTransporter(kakaoMapDataReceiver, { map, location });
 });
 
 StateManagement.regObserver('receiveFromSocketServer', (e) => {
     console.log(e);
 });
 
-const map = kakaoMap({
-    container : document.getElementById('map'),
-    level : 3,
-});
-
 if (enviroment === 'web') {
-    navigator.geolocation.getCurrentPosition( (position) => {
-        let {latitude, longitude, accuracy} = position.coords;
-        let location = {latitude, longitude, accuracy};
-        dataTransporter(kakaoMapDataReceiver, {map , location});
+    navigator.geolocation.getCurrentPosition((position) => {
+        let { latitude, longitude, accuracy } = position.coords;
+        let location = { latitude, longitude, accuracy };
+        dataTransporter(kakaoMapDataReceiver, { map, location });
         sendToSocketServer('userLocation', location);
     });
-}else{
-     sendToNative('requestLocation');
+} else {
+    sendToNative('requestLocation');
 }
 
 //내 위치정보를 보낸다.
-
-
-
