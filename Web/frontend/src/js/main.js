@@ -31,9 +31,16 @@ const map = kakaoMap({
 
 if (enviroment === 'web') {
     navigator.geolocation.getCurrentPosition( (position) => {
-        dataTransporter(kakaoMapDataReceiver, {map , position});
+        let {latitude, longitude, accuracy} = position.coords;
+        let location = {latitude, longitude, accuracy};
+        dataTransporter(kakaoMapDataReceiver, {map , location});
+        sendToSocketServer('userLocation', location);
     });
 }else{
      sendToNative('requestLocation');
 }
+
+//내 위치정보를 보낸다.
+
+
 

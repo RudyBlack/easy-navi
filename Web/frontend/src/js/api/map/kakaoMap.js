@@ -25,8 +25,8 @@ const setMarker = (map, locPosition) => {
 };
 
 const kakaoMapDataReceiver = (data) => {
-    if (data.position.coords) {
-        updateMap(data.map, data.position.coords);
+    if (data.location) {
+        updateMap(data.map, data.location);
     }
 };
 

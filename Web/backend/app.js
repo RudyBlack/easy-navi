@@ -22,7 +22,7 @@ http.listen(3000, function () {
 });
 
 io.on('connection', function (socket) {
-    console.log('user connected: ', socket.id); 
+    console.log('user connected: ', socket.id);
 
     io.to(socket.id).emit('hello', 'is Connect!');
 
@@ -30,9 +30,14 @@ io.on('connection', function (socket) {
         console.log('user disconnected: ', socket.id);
     });
 
-    socket.on('login', (e) => {
-        
+    socket.on('userLocation', function (e) {
+        io.to(id).emit('userLocation', data); // 이게 안됨.
+
     });
+    
+
 });
+
+
 
 module.exports = app;
