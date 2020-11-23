@@ -22,7 +22,7 @@ http.listen(3000, function () {
 });
 
 io.on('connection', function (socket) {
-    console.log('user connected: ', socket.id);
+    console.log('user connected: ', socket.id); 
 
     io.to(socket.id).emit('hello', 'is Connect!');
 
@@ -31,7 +31,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('login', (e) => {
-        console.log('user disconnected: ', e);
+        
     });
 });
 

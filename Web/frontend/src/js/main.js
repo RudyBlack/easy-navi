@@ -11,26 +11,26 @@ import { sendToSocketServer } from './send/sendToSocketServer.js';
 
 import { kakaoMap } from './api/map/kakaoMap.js';
 
+function dataTransporter() {}
 StateManagement.regObserver('receiveFromNative', (e) => {
-    let { altitude, latitude, longitude } = dataParse(e.data);
-    StateManagement.set('altitude', altitude).set('latitude', latitude).set('longitude', longitude);
+    dataParse(e.data); //데이터 파스.
+    // data.push()
 });
 
 StateManagement.regObserver('receiveFromSocketServer', (e) => {
     console.log(e);
 });
 
-kakaoMap(StateManagement);
-
 if (enviroment === 'web') {
-    navigator.geolocation.getCurrentPosition(function (position) {
-        let latitude = position.coords.latitude;
-        let longitude = position.coords.longitude;
-        StateManagement.set('latitude', latitude).set('longitude', longitude);
+    navigator.geolocation.getCurrentPosition( (position) => {
+        dataTransporter({target : kakaoMap.dataReceiver, data : position});
     });
+}else{
+     sendToNative('requestLocation');
 }
 
-if (enviroment === 'webview') {
-    sendToNative('location');
-}
-
+kakaoMap({
+    container : document.getElementById('map'),
+    marker: 'normal',
+    panTo: true,
+});
