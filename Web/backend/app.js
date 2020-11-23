@@ -31,7 +31,8 @@ io.on('connection', function (socket) {
     });
 
     socket.on('userLocation', function (e) {
-        socket.broadcast.emit('hello', e);
+        let {id, location} = e;
+        socket.broadcast.emit('userLocation', {id , location});
     });
     
 });

@@ -25,10 +25,14 @@ StateManagement.regObserver('receiveFromNative', (e) => {
     let location = { latitude, longitude, accuracy };
     
     dataTransporter(kakaoMapDataReceiver, { map, location });
+    sendToSocketServer('userLocation', location);
 });
 
 StateManagement.regObserver('receiveFromSocketServer', (e) => {
-    console.log(e);
+    let { latitude, longitude, accuracy } = dataParse(e.data);
+    let location = { latitude, longitude, accuracy };
+    
+    if(e.type === 'userLocation') dataTransporter(kakaoMapDataReceiver, { map, location });
 });
 
 if (enviroment === 'web') {
@@ -42,4 +46,3 @@ if (enviroment === 'web') {
     sendToNative('requestLocation');
 }
 
-//내 위치정보를 보낸다.
