@@ -9,28 +9,31 @@ import './receive/receiveFromSocketServer.js';
 import { sendToNative } from './send/sendToNative.js';
 import { sendToSocketServer } from './send/sendToSocketServer.js';
 
-import { kakaoMap } from './api/map/kakaoMap.js';
+import { kakaoMap, kakaoMapDataReceiver } from './api/map/kakaoMap.js';
 
-function dataTransporter() {}
+
+function dataTransporter(dataReceiver, data) {
+    dataReceiver(data);
+}
 StateManagement.regObserver('receiveFromNative', (e) => {
     dataParse(e.data); //데이터 파스.
-    // data.push()
+    // dataTransporter();
 });
 
 StateManagement.regObserver('receiveFromSocketServer', (e) => {
     console.log(e);
 });
 
+const map = kakaoMap({
+    container : document.getElementById('map'),
+    level : 3,
+});
+
 if (enviroment === 'web') {
     navigator.geolocation.getCurrentPosition( (position) => {
-        dataTransporter({target : kakaoMap.dataReceiver, data : position});
+        dataTransporter(kakaoMapDataReceiver, {map , position});
     });
 }else{
      sendToNative('requestLocation');
 }
 
-kakaoMap({
-    container : document.getElementById('map'),
-    marker: 'normal',
-    panTo: true,
-});
