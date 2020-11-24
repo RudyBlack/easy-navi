@@ -1,4 +1,4 @@
-export function marker({ map, locPosition}) {
+function marker({ map, locPosition}) {
     var marker = new kakao.maps.Marker({
         position: locPosition,
     });
@@ -6,3 +6,7 @@ export function marker({ map, locPosition}) {
     return marker;
 }
 
+
+export const setMarker = ({map, locPosition}) => {
+    marker({ locPosition }).setMap(map);
+};

@@ -1,33 +1,39 @@
-import * as move from './move/moveAnimation.js';
-import { marker } from './ui/marker.js';
+import { panTo } from './move/moveAnimation.js';
+import { setMarker } from './ui/marker.js';
 import { geolocationParse } from '../../utils/parse/dataParse.js';
 
-const kakaoMap = ({container, level}) => {
-    return new kakao.maps.Map(container, {
-        center: new kakao.maps.LatLng(0, 0),
-        level
-    });
-};
+let map;
 
-const updateMap = (map, location) => {
-    let { latitude, longitude } = location;
-    let locPosition = new kakao.maps.LatLng(latitude, longitude);
-    setMarker(map, locPosition);
-    panTo(map, locPosition);
-};
+const kakaoMap = (type, paramObj) => {
+    let { latitude, longitude, accuracy } = paramObj.coords;
+    let { container, level } = paramObj;
 
-const panTo = (map, locPosition) => {
-    map.panTo(locPosition);
-};
+    if (type === 'init') {
+        init({ map, container, level, latitude, longitude, accuracy });
+    }
+    if (type === 'update') {
+        update({ map, latitude, longitude });
+    }
 
-const setMarker = (map, locPosition) => {
-    marker({ locPosition }).setMap(map);
-};
+    function init({ map, container, level, latitude, longitude }) {
+        let locPosition = new kakao.maps.LatLng(latitude, longitude);
 
-const kakaoMapDataReceiver = ({map, location}) => {
-    if (location) {
-        updateMap(map, location);
+        map = new kakao.maps.Map(container, {
+            center: new kakao.maps.LatLng(latitude, longitude),
+            level,
+        });
+
+        setMarker({map, locPosition});
+        panTo({map, locPosition});
+    }
+
+    function update({ map, latitude, longitude }) {
+        let locPosition = new kakao.maps.LatLng(latitude, longitude);
+        setMarker(map, locPosition);
+        panTo(map, locPosition);
     }
 };
 
-export {kakaoMap, kakaoMapDataReceiver}
+export const kakaoMapDataReceiver = (type, paramObj) => {
+    kakaoMap(type, paramObj);
+};
