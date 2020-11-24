@@ -11,19 +11,18 @@ const kakaoMapConfig = {
 }
 
 navigator.geolocation.getCurrentPosition((position) => {
+    let {latitude, longitude, accuracy} = position.coords;
+    kakaoMapConfig.coords = {latitude, longitude, accuracy};
     
-    kakaoMapConfig.coords = position.coords;
     kakaoMapDataReceiver( 'init', kakaoMapConfig);
-    // sendToSocketServer('userLocation', location);
+    sendToSocketServer('userLocation', kakaoMapConfig.coords);
 });
 
 
 
 StateManagement.regObserver('receiveFromSocketServer', (e) => {
-
-    console.log(e)
-    // if (e.type === 'userLocation') {
-    //     kakaoMapDataReceiver('update', {id, latitude, longitude, accuracy});
-    // }
+    if (e.type === 'userLocation') {
+        kakaoMapDataReceiver('update', e);
+    }
 });
 

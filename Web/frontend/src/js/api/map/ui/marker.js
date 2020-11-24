@@ -1,12 +1,14 @@
-function marker({ map, locPosition}) {
+function marker(obj) {
     var marker = new kakao.maps.Marker({
-        position: locPosition,
+        position: obj.locPosition,
+        draggable : true,
+        title : obj.id
     });
 
     return marker;
 }
 
-
-export const setMarker = ({map, locPosition}) => {
-    marker({ locPosition }).setMap(map);
+export const setMarker = (obj) => {
+    console.log(obj.id)
+    marker(obj).setMap(obj.map);
 };

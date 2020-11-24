@@ -24,15 +24,14 @@ http.listen(3000, function () {
 io.on('connection', function (socket) {
     console.log('user connected: ', socket.id);
 
-    
-
     socket.on('disconnect', () => {
         console.log('user disconnected: ', socket.id);
     });
 
     socket.on('userLocation', function (e) {
-        let {id, location} = e;
-        socket.broadcast.emit('userLocation', {id , location});
+        console.log(e);
+        let {id, data} = e;
+        socket.broadcast.emit('userLocation', {id , data});
     });
     
 });
