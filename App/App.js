@@ -31,11 +31,12 @@ const Location = async () => {
   }
 
   const postMessage = (data) => {
+    console.log(data);
     myWebView.postMessage(JSON.stringify(data), '*');
   }
 
   const onMessage = async (message) => {
-    if(message.nativeEvent.data === 'location'){
+    if(message.nativeEvent.data === 'requestLocation'){
       let location = await Location();
       postMessage(location);
     }
