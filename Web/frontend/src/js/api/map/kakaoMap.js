@@ -1,43 +1,47 @@
 import { panTo } from './move/moveAnimation.js';
-import { setMarker } from './ui/marker.js';
-import { setPolyline } from './ui/polyline.js';
+import { setMarker, updateMarker } from './ui/marker.js';
+import { setPolyline, updatePolyline } from './ui/polyline.js';
 import { geolocationParse } from '../../utils/parse/dataParse.js';
 
-let map;
+const kakaoMap = ((type, obj) => {
+    let map;
+    let ui = [];
+    let data = [];
 
-const kakaoMap = (type, paramObj) => {
-    if (type === 'init') {
-        let { container, level } = paramObj;
-        let { latitude, longitude, accuracy } = paramObj.coords;    
-        map = init({ container, level, latitude, longitude, accuracy });
-        
-    }
-    if (type === 'update') {
-        let { id } = paramObj;
-        let { latitude, longitude, accuracy } = paramObj.data;
-        update({ map, latitude, longitude, id });
-    }
+    return {
+        init: (obj) => {
+            let arg = setData(obj);
 
-    function init({ container, level, latitude, longitude }) {
-        let locPosition = new kakao.maps.LatLng(latitude, longitude);
-        let map = new kakao.maps.Map(container, {
-            center: new kakao.maps.LatLng(latitude, longitude),
-            level,
-        });
-        
-        setMarker({map, locPosition});
-        panTo({map, locPosition});
-        
-        return map;
-    }
+            map = new kakao.maps.Map(arg.container, {
+                center: arg.locPosition,
+                level: arg.level,
+            });
 
-    function update({ map, id, latitude, longitude }) {
-        let locPosition = new kakao.maps.LatLng(latitude, longitude);
-        setPolyline({type : 'circle', map, locPosition, id});
-        panTo({map, locPosition});
-    }
-};
+            ui.push(setMarker('default', map, arg), setPolyline('circle', map, arg));
+        },
 
-export const kakaoMapDataReceiver = (type, paramObj) => {
-    kakaoMap(type, paramObj);
+        update: (obj) => {
+            let arg = setData(obj.data);
+            setPolyline('circle', map, arg);
+        },
+    };
+
+    function setData(obj) {
+        if (!obj.locPosition) {
+            if (obj.coords) {
+                let { latitude, longitude } = obj.coords;
+                let locPosition = new kakao.maps.LatLng(latitude, longitude);
+                return Object.assign(obj, {locPosition});
+            }
+            if (obj.latitude && obj.longitude) {
+                let locPosition = new kakao.maps.LatLng(obj.latitude, obj.longitude);
+                return Object.assign(obj, {locPosition});
+            }
+        }
+        return obj;
+    }
+})();
+
+export const setKakaoMap = (type, obj) => {
+    kakaoMap[type](obj);
 };

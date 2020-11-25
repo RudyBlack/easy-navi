@@ -1,11 +1,10 @@
-const polyline = (obj) => {
+const polyline = (type, obj) => {
     
-    if(obj.type === 'circle'){
+    if(type === 'circle'){
         return circle(obj);
     }
     
     function circle(obj) {
-        console.log(obj);
         return new kakao.maps.Circle({
             center: obj.locPosition,
             radius: 5, // 미터 단위의 원의 반지름입니다
@@ -20,6 +19,10 @@ const polyline = (obj) => {
     return polyline;
 };
 
-export const setPolyline = (obj) => {
-    polyline(obj).setMap(obj.map);
+export const setPolyline = (type, map, obj) => {
+    polyline(type, obj).setMap(map);
 };
+
+export const updatePolyline = () => {
+    
+}

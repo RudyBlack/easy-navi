@@ -1,5 +1,5 @@
 import './receive/receiveFromSocketServer.js';
-import { kakaoMapDataReceiver } from './api/map/kakaoMap.js';
+import { setKakaoMap } from './api/map/kakaoMap.js';
 import { sendToSocketServer } from './send/sendToSocketServer.js';
 import { dataParse } from './utils/parse/dataParse.js';
 import { StateManagement } from './utils/dataManager/globalData.js';
@@ -14,7 +14,7 @@ navigator.geolocation.getCurrentPosition((position) => {
     let {latitude, longitude, accuracy} = position.coords;
     kakaoMapConfig.coords = {latitude, longitude, accuracy};
     
-    kakaoMapDataReceiver( 'init', kakaoMapConfig);
+    setKakaoMap('init', kakaoMapConfig);
     sendToSocketServer('userLocation', kakaoMapConfig.coords);
 });
 
@@ -22,7 +22,7 @@ navigator.geolocation.getCurrentPosition((position) => {
 
 StateManagement.regObserver('receiveFromSocketServer', (e) => {
     if (e.type === 'userLocation') {
-        kakaoMapDataReceiver('update', e);
+        setKakaoMap('update', e);
     }
 });
 

@@ -8,7 +8,10 @@ function marker(obj) {
     return marker;
 }
 
-export const setMarker = (obj) => {
-    console.log(obj.id)
-    marker(obj).setMap(obj.map);
+export const setMarker = (type, map, obj) => {
+    marker(obj).setMap(map);
 };
+
+export const updateMarker = (obj) => {
+    
+}
