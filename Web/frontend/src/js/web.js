@@ -4,7 +4,8 @@ import { sendToSocketServer } from './send/sendToSocketServer.js';
 import { dataParse } from './utils/parse/dataParse.js';
 import { StateManagement } from './utils/dataManager/globalData.js';
 
-const kakaoMapConfig = {
+const initKakaoMapConfig = {
+    id : 'me',
     container : document.getElementById('map'),
     level : 3,
     coords : {}
@@ -12,10 +13,10 @@ const kakaoMapConfig = {
 
 navigator.geolocation.getCurrentPosition((position) => {
     let {latitude, longitude, accuracy} = position.coords;
-    kakaoMapConfig.coords = {latitude, longitude, accuracy};
+    initKakaoMapConfig.coords = {latitude, longitude, accuracy};
     
-    setKakaoMap('init', kakaoMapConfig);
-    sendToSocketServer('userLocation', kakaoMapConfig.coords);
+    setKakaoMap('init', initKakaoMapConfig);
+    sendToSocketServer('userLocation', initKakaoMapConfig.coords);
 });
 
 

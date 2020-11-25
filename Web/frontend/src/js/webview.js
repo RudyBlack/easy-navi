@@ -8,7 +8,8 @@ import { StateManagement } from './utils/dataManager/globalData.js';
 
 sendToNative('requestLocation');
 
-const kakaoMapConfig = {
+const initKakaoMapConfig = {
+    id : 'me',
     container : document.getElementById('map'),
     level : 3,
     coords : {}
@@ -16,10 +17,9 @@ const kakaoMapConfig = {
 
 StateManagement.regObserver('receiveFromNative', (e) => {
   
-    kakaoMapConfig.coords = e;
-    console.log(kakaoMapConfig);
-    setKakaoMap('init', kakaoMapConfig);
-    sendToSocketServer('userLocation', kakaoMapConfig.coords);
+    initKakaoMapConfig.coords = e;
+    setKakaoMap('init', initKakaoMapConfig);
+    sendToSocketServer('userLocation', initKakaoMapConfig.coords);
 });
 
 StateManagement.regObserver('receiveFromSocketServer', (e) => {

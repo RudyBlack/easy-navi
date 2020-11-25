@@ -1,4 +1,4 @@
-const polyline = (type, obj) => {
+const Polyline = (type, obj) => {
     
     if(type === 'circle'){
         return circle(obj);
@@ -20,7 +20,9 @@ const polyline = (type, obj) => {
 };
 
 export const setPolyline = (type, map, obj) => {
-    polyline(type, obj).setMap(map);
+    let polyline = Polyline(type, obj);
+    polyline.setMap(map);
+    return polyline;
 };
 
 export const updatePolyline = () => {

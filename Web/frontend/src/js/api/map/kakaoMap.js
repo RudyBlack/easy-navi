@@ -5,7 +5,7 @@ import { geolocationParse } from '../../utils/parse/dataParse.js';
 
 const kakaoMap = ((type, obj) => {
     let map;
-    let ui = [];
+    let ui = new Map();
     let data = [];
 
     return {
@@ -16,13 +16,20 @@ const kakaoMap = ((type, obj) => {
                 center: arg.locPosition,
                 level: arg.level,
             });
-
-            ui.push(setMarker('default', map, arg), setPolyline('circle', map, arg));
+            
+            ui.set(obj.id, setMarker('default', map, arg));
+            
+            setTimeout(()=>{
+                ui.get('me').setPosition( new kakao.maps.LatLng(33.450701, 126.570667) );
+                map.panTo(new kakao.maps.LatLng(33.450701, 126.570667))
+            },2000)
+            
+            
         },
 
         update: (obj) => {
             let arg = setData(obj.data);
-            setPolyline('circle', map, arg);
+            // ui.push(setPolyline('circle', map, arg));
         },
     };
 
