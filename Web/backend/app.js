@@ -5,7 +5,7 @@ const path = require('path');
 const io = require('socket.io')(http);
 const socketio = require('socket.io');
 
-const port = 3000;
+const port = 80;
 
 require('./socket/socket.js');
 
@@ -17,8 +17,8 @@ app.route('/src/*').all(function (req, res) {
     res.sendFile(path.join(__dirname, '../frontend', req.url));
 });
 
-http.listen(3000, function () {
-    console.log('app is running on port: 3000');
+http.listen(port, function () {
+    console.log('app is running on port: ' + port);
 });
 
 io.on('connection', function (socket) {
