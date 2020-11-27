@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
+const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
-const io = require('socket.io')(http);
+const io = require('socket.io')(https);
 const socketio = require('socket.io');
 
 const port = 443;
@@ -15,7 +15,12 @@ const serverOption = {
   cert: fs.readFileSync('./.ssl/certificate.crt'),
 };
 
-require('./socket/socket.js');
+
+http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+}).listen(80);
+
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './frontend', 'index.html'));
